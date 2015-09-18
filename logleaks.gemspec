@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Logleaks::VERSION
   spec.authors       = ["Chris Ewald"]
   spec.email         = ["chrisewald@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{Simple production memory logging.}
+  spec.description   = spec.summary
   spec.homepage      = ""
   spec.license       = "MIT"
 

@@ -12,7 +12,7 @@ module Logleaks
     def call(env)
       before_rss = get_rss_memory
       response = @app.call(env)
-      @logger.info memory_log_entry(before_rss)
+      @logger.info memory_log_entry(env, before_rss)
       response
     end
 
@@ -26,10 +26,11 @@ module Logleaks
       end
     end
 
-    def memory_log_entry(before_rss)
+    def memory_log_entry(env, before_rss)
       process_pid = Process.pid
       difference_string = memory_difference_string(before_rss, get_rss_memory)
-      "Request rss memory for process #{process_pid}: #{difference_string}"
+      request = "#{env['REQUEST_METHOD']} \"#{env['REQUEST_PATH']}\""
+      "#{request} (PID: #{process_pid}) rss memory: #{difference_string}"
     end
 
     def memory_difference_string(before, after)

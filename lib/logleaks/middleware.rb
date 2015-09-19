@@ -2,9 +2,11 @@ require 'get_process_mem'
 
 module Logleaks
   class Middleware
+    attr_reader :app, :logger
+
     def initialize(app, logger: nil)
       @app = app
-      @logger = logger
+      @logger = logger || find_logger
     end
 
     def call(env)
@@ -15,6 +17,14 @@ module Logleaks
     end
 
     protected
+
+    def find_logger
+      if defined?(Rails)
+        Rails.logger
+      else
+        raise ArgumentError, "Must supply a logger option to Logleaks::Middleware"
+      end
+    end
 
     def memory_log_entry(before_rss)
       process_pid = Process.pid

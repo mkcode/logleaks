@@ -23,4 +23,21 @@ describe "Logleaks::Middleware" do
     Logleaks::Middleware.new(@app, @options).call({})
     @log.string.must_include 'rss memory'
   end
+
+  it "uses Rails.logger by default if it is available" do
+    module Rails; def self.logger; "rails-logger"; end; end
+    middleware = Logleaks::Middleware.new(@app, {})
+    middleware.logger.must_equal "rails-logger"
+    Object.send :remove_const, :Rails
+  end
+
+  it "raises an error if Rails.logger is not avaiable and logger is not supplied" do
+    begin
+      Logleaks::Middleware.new(@app, {})
+    rescue ArgumentError => error
+      error.message.must_include 'logger option'
+    else
+      assert false
+    end
+  end
 end

@@ -1,6 +1,13 @@
 # Logleaks
 
-TODO: Write a gem description
+Dead simple memory logging for rack apps. Because you already have a logging solution setup
+and you just want to include per request memory statistics in them.
+
+This is intended to be used in production mode. It will log rss memory usage before and after
+every request so, actions/requests that leak memory may be indentified.
+
+After identifying troublesome areas in production, a tool like ruby-prof may be required to
+deep dive into the issue in development mode.
 
 ## Installation
 
@@ -14,13 +21,14 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install logleaks
-
 ## Usage
 
-TODO: Write usage instructions here
+Add in your apps middleware
+
+```
+require 'logleaks/middleware'
+use Logleaks::Middleware, logger: Rails.logger
+```
 
 ## Contributing
 

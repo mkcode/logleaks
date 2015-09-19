@@ -1,17 +1,26 @@
 require 'minitest/autorun'
-require 'rack/mock'
 require 'logleaks/middleware'
+require 'logger'
 
 describe "Logleaks::Middleware" do
-  app = lambda do |env|
-    [200, {'Content-Type' => 'text/plain'}, 'response body']
+  before do
+    @app = lambda do |env|
+      [200, {'Content-Type' => 'text/plain'}, 'response body']
+    end
+    @log = StringIO.new
+    @options = { logger: Logger.new(@log) }
   end
 
-  specify "returns the supplied app's response" do
-    status, headers, body = Logleaks::Middleware.new(app).call({})
+  it "returns the supplied app's response" do
+    status, headers, body = Logleaks::Middleware.new(@app, @options).call({})
 
     status.must_equal 200
     headers['Content-Type'].must_equal 'text/plain'
     body.must_equal 'response body'
+  end
+
+  it "logs some memories" do
+    Logleaks::Middleware.new(@app, @options).call({})
+    @log.string.must_include 'rss memory'
   end
 end
